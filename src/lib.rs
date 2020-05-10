@@ -53,6 +53,10 @@ impl Iterator for BitVec {
     }
 }
 
+pub trait ReadAs<T> {
+    fn read_as(&self) -> T;
+}
+
 // BitVec::from converts unsigned integers into boolean vector.
 // A bit order will be reversed at that time.
 //
@@ -80,15 +84,45 @@ macro_rules! bitvec_from {
     };
 }
 
+macro_rules! bitvec_read_as {
+    ($ty:ty) => {
+        impl ReadAs<$ty> for BitVec {
+            fn read_as(&self) -> $ty {
+                let size = std::mem::size_of::<$ty>() * 8;
+                let mut ret = 0 as $ty;
+                for i in 1..=size {
+                    let idx = size - i;
+                    if let Some(e) = self.data.get(idx) {
+                        if *e {
+                            ret |= 1;
+                        }
+                    }
+
+                    if i != size {
+                        ret <<= 1;
+                    }
+                }
+                ret
+            }
+        }
+    };
+}
+
 bitvec_from!(u8);
 bitvec_from!(u16);
 bitvec_from!(u32);
 bitvec_from!(u64);
 bitvec_from!(usize);
 
+bitvec_read_as!(u8);
+bitvec_read_as!(u16);
+bitvec_read_as!(u32);
+bitvec_read_as!(u64);
+bitvec_read_as!(usize);
+
 #[cfg(test)]
 mod tests {
-    use super::BitVec;
+    use crate::{BitVec, ReadAs};
 
     #[test]
     fn test_with_capacity() {
@@ -162,5 +196,43 @@ mod tests {
 
         assert_eq!(bv.next(), None);
         assert_eq!(bv.next(), None);
+    }
+
+    macro_rules! read_as_test {
+        ($ty:ty) => {
+            let size = std::mem::size_of::<$ty>() * 8;
+            let val = 1 as $ty;
+            let bv = BitVec::from(val);
+            let mut orig_vec = vec![false; size];
+            for i in 0..size {
+                if bv.data[i] {
+                    orig_vec[i] = true;
+                }
+            }
+
+            let n: $ty = bv.read_as();
+            assert_eq!(n, val);
+            assert_eq!(bv.data, orig_vec);
+        };
+    }
+
+    #[test]
+    fn test_read_as_u8() {
+        read_as_test!(u8);
+    }
+
+    #[test]
+    fn test_read_as_u16() {
+        read_as_test!(u16);
+    }
+
+    #[test]
+    fn test_read_as_u32() {
+        read_as_test!(u32);
+    }
+
+    #[test]
+    fn test_read_as_u64() {
+        read_as_test!(u64);
     }
 }
