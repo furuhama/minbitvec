@@ -53,6 +53,13 @@ impl Iterator for BitVec {
     }
 }
 
+// BitVec::from converts unsigned integers into boolean vector.
+// A bit order will be reversed at that time.
+//
+// examples:
+//   1u8 -> 00000001
+//   BitVec::from::<u8>(1u8) -> vec![true, false, false, false, false, false, false, false]
+//
 macro_rules! bitvec_from {
     ($ty:ty) => {
         impl From<$ty> for BitVec {
