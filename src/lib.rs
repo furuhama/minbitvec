@@ -8,8 +8,23 @@ impl BitVec {
         Default::default()
     }
 
+    pub fn with_capacity(capacity: usize) -> Self {
+        Self {
+            data: Vec::with_capacity(capacity),
+            ..Default::default()
+        }
+    }
+
     pub fn len(&self) -> usize {
         self.data.len()
+    }
+
+    pub fn capacity(&self) -> usize {
+        self.data.capacity()
+    }
+
+    pub fn push(&mut self, e: bool) {
+        self.data.push(e)
     }
 }
 
@@ -68,6 +83,16 @@ bitvec_from!(usize);
 #[cfg(test)]
 mod tests {
     use super::BitVec;
+
+    #[test]
+    fn test_with_capacity() {
+        assert_eq!(BitVec::with_capacity(10).data.capacity(), 10);
+    }
+
+    #[test]
+    fn test_capacity() {
+        assert_eq!(BitVec::with_capacity(10).capacity(), 10);
+    }
 
     #[test]
     fn test_len() {
