@@ -108,7 +108,7 @@ mod tests {
         assert_eq!(BitVec::from(1u64).len(), 64);
     }
 
-    macro_rules! bitvec_from_test {
+    macro_rules! from_test {
         ($ty:ty) => {
             let size = std::mem::size_of::<$ty>() * 8;
 
@@ -124,28 +124,28 @@ mod tests {
     }
 
     #[test]
-    fn test_u8() {
-        bitvec_from_test!(u8);
+    fn test_from_u8() {
+        from_test!(u8);
     }
 
     #[test]
-    fn test_u16() {
-        bitvec_from_test!(u16);
+    fn test_from_u16() {
+        from_test!(u16);
     }
 
     #[test]
-    fn test_u32() {
-        bitvec_from_test!(u32);
+    fn test_from_u32() {
+        from_test!(u32);
     }
 
     #[test]
-    fn test_u64() {
-        bitvec_from_test!(u64);
+    fn test_from_u64() {
+        from_test!(u64);
     }
 
     #[test]
-    fn test_usize() {
-        bitvec_from_test!(usize);
+    fn test_from_usize() {
+        from_test!(usize);
     }
 
     #[test]
