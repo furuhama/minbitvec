@@ -61,6 +61,14 @@ bitvec_from!(usize);
 mod tests {
     use super::BitVec;
 
+    #[test]
+    fn test_len() {
+        assert_eq!(BitVec::from(1u8).len(), 8);
+        assert_eq!(BitVec::from(1u16).len(), 16);
+        assert_eq!(BitVec::from(1u32).len(), 32);
+        assert_eq!(BitVec::from(1u64).len(), 64);
+    }
+
     macro_rules! bitvec_from_test {
         ($ty:ty) => {
             let size = std::mem::size_of::<$ty>() * 8;
