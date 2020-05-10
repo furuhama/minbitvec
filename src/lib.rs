@@ -3,7 +3,6 @@ pub struct BitVec {
     pos: usize,
 }
 
-#[allow(dead_code)]
 impl BitVec {
     pub fn new() -> Self {
         Self {
