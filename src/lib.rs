@@ -58,17 +58,16 @@ macro_rules! bitvec_from {
         impl From<$ty> for BitVec {
             fn from(i: $ty) -> Self {
                 let size = std::mem::size_of::<$ty>() * 8;
-                let mut vec = Vec::with_capacity(size);
+
+                let mut bv = Self::with_capacity(size);
                 let mut i = i.clone();
+
                 for _ in 1..=size {
-                    vec.push(i & 1 == 1);
+                    bv.push(i & 1 == 1);
                     i >>= 1;
                 }
 
-                Self {
-                    data: vec,
-                    ..Default::default()
-                }
+                bv
             }
         }
     };
