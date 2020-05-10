@@ -5,14 +5,20 @@ pub struct BitVec {
 
 impl BitVec {
     pub fn new() -> Self {
-        Self {
-            data: Vec::new(),
-            pos: 0,
-        }
+        Default::default()
     }
 
     pub fn len(&self) -> usize {
         self.data.len()
+    }
+}
+
+impl Default for BitVec {
+    fn default() -> Self {
+        Self {
+            data: Vec::new(),
+            pos: 0,
+        }
     }
 }
 
@@ -44,7 +50,10 @@ macro_rules! bitvec_from {
                     i >>= 1;
                 }
 
-                Self { data: vec, pos: 0 }
+                Self {
+                    data: vec,
+                    ..Default::default()
+                }
             }
         }
     };
